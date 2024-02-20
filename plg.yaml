@@ -5,7 +5,9 @@ test_pod:
 
 loki:
   enabled: true
+  # 클러스터 내부 Grafana에서 Default Datasource로 취급할것인가 여부
   isDefault: true
+  # 클러스터 내부 Grafana에서 Loki Datasource를 프로비전하기 위한 ConfigMap에 사용됨. 외부노출시 사용불가.
   url: http://{{(include "loki.serviceName" .)}}:{{ .Values.loki.service.port }}
   readinessProbe:
     httpGet:
