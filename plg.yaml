@@ -30,6 +30,7 @@ promtail:
     logLevel: info
     serverPort: 3101
     clients:
+      # 로그 데이터를 전송할 주소. # Promtail은 Loki쪽으로 로그를 PUSH한다.
       - url: http://{{ .Release.Name }}:3100/loki/api/v1/push
 
 fluent-bit:
