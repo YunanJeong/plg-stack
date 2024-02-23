@@ -35,7 +35,7 @@ loki:
     compactor:
       retention_enabled: true  # false면, 무제한 저장
     limits_config:
-      retention_period: 24h    # default: 744h(31일), 최소 24h
+      retention_period: 168h    # default: 744h(31일), 최소 24h
 
 promtail:
   enabled: true
