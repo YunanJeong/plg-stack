@@ -27,7 +27,9 @@ loki:
     type: LoadBalancer
     # nodePort:
     port: 3100
-    annotations: {}
+    annotations: # {}
+      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"                # EKS
+      service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"  # EKS
     labels: {}
     targetPort: http-metrics
 
