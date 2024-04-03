@@ -1,0 +1,95 @@
+test_pod:
+  enabled: false
+
+loki:
+  enabled: true
+
+  # 클러스터 내부 Grafana에서 Default Datasource로 취급할것인가 여부
+  isDefault: false
+
+  # 클러스터 내부 Grafana에서 Loki Datasource를 프로비전하기 위한 ConfigMap에 사용됨. 외부노출시 사용불가.
+  url: http://{{(include "loki.serviceName" .)}}:{{ .Values.loki.service.port }}
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  datasource:
+    jsonData: "{}"
+    uid: ""
+
+  service:
+    type: LoadBalancer
+    # nodePort:
+    port: 3100
+    annotations: {}
+    labels: {}
+    targetPort: http-metrics
+
+  config:
+    compactor:
+      retention_enabled: true  # false면, 무제한 저장
+    limits_config:
+      retention_period: 168h    # default: 744h(31일), 최소 24h
+
+grafana:
+  enabled: true
+  sidecar:
+    datasources:
+      label: ""
+      labelValue: ""
+      enabled: true
+      maxLines: 1000
+  image:
+    tag: 8.3.5
+
+  service:
+    enabled: true
+    type: LoadBalancer
+    port: 80
+    targetPort: 3000
+      # targetPort: 4181 To be used with a proxy extraContainer
+    ## Service annotations. Can be templated.
+    annotations: {}
+    labels: {}
+    portName: service
+    # Adds the appProtocol field to the service. This allows to work with istio protocol selection. Ex: "http" or "tcp"
+    appProtocol: ""
+    
+  adminUser: admin
+  adminPassword: admin
+
+promtail:
+  enabled: false
+  config:
+    logLevel: info
+    serverPort: 3101
+    clients:
+      # 로그 데이터를 전송할 주소. # Promtail은 Loki쪽으로 로그를 PUSH한다.
+      - url: http://{{ .Release.Name }}:3100/loki/api/v1/push
+
+fluent-bit:
+  enabled: false
+
+prometheus:
+  enabled: false
+
+filebeat:
+  enabled: false
+
+logstash:
+  enabled: false
+
+# proxy is currently only used by loki test pod
+# Note: If http_proxy/https_proxy are set, then no_proxy should include the
+# loki service name, so that tests are able to communicate with the loki
+# service.
+proxy:
+  http_proxy: ""
+  https_proxy: ""
+  no_proxy: ""
