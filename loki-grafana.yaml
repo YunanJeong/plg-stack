@@ -1,3 +1,6 @@
+# 배포시 릴리즈명에서 "loki-grafana" 사용금지
+# 자동생성 이름과 중복돼서 service 생성시 충돌발생
+
 test_pod:
   enabled: false
 
@@ -51,7 +54,7 @@ grafana:
   service:
     enabled: true
     type: LoadBalancer
-    port: 80
+    port: 3000  # 80
     targetPort: 3000
       # targetPort: 4181 To be used with a proxy extraContainer
     ## Service annotations. Can be templated.
@@ -66,12 +69,6 @@ grafana:
 
 promtail:
   enabled: false
-  config:
-    logLevel: info
-    serverPort: 3101
-    clients:
-      # 로그 데이터를 전송할 주소. # Promtail은 Loki쪽으로 로그를 PUSH한다.
-      - url: http://{{ .Release.Name }}:3100/loki/api/v1/push
 
 fluent-bit:
   enabled: false
