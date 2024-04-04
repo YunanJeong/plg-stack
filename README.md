@@ -27,8 +27,8 @@ helm upgrade eks-loki grafana/loki-stack --version 2.9.12 -f my_value.yaml
 
 ## 간단한 대시보드
 
-https://grafana.com/grafana/dashboards/13639-logs-app/
-https://grafana.com/grafana/dashboards/15141-kubernetes-service-logs/
+<https://grafana.com/grafana/dashboards/13639-logs-app/>
+<https://grafana.com/grafana/dashboards/15141-kubernetes-service-logs/>
 
 ## retention 정책 (Log Deletion)
 
@@ -53,3 +53,9 @@ loki:
     limits_config:
       retention_period: 744h  # default: 744h(31일), 최소 24h
 ```
+
+## 수집주기 Default 값
+
+- promtail이 로그수집하는 주기(scrape_interval): 10s
+- promtail이 Loki로 보내는 주기: 1s (단, batch buffer에 영향 받음)
+- 위 두 항목 모두 promtail에서 설정함. value파일에서 제어 가능하며, 실행중인 컨테이너에선 `/etc/promtail/promtail.yaml`에서 확인가능
