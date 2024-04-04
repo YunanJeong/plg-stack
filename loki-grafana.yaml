@@ -4,9 +4,33 @@
 test_pod:
   enabled: false
 
+promtail:
+  enabled: false
+
+fluent-bit:
+  enabled: false
+
+prometheus:
+  enabled: false
+
+filebeat:
+  enabled: false
+
+logstash:
+  enabled: false
+
+# proxy is currently only used by loki test pod
+# Note: If http_proxy/https_proxy are set, then no_proxy should include the
+# loki service name, so that tests are able to communicate with the loki
+# service.
+proxy:
+  http_proxy: ""
+  https_proxy: ""
+  no_proxy: ""
+
+
 loki:
   enabled: true
-
   # 클러스터 내부 Grafana에서 Default Datasource로 취급할것인가 여부
   isDefault: false
 
@@ -67,26 +91,47 @@ grafana:
   adminUser: admin
   adminPassword: admin
 
-promtail:
-  enabled: false
+  ## Configure grafana dashboard providers
+  ## ref: http://docs.grafana.org/administration/provisioning/#dashboards
+  ##
+  ## `path` must be /var/lib/grafana/dashboards/<provider_name>
+  ##
+  dashboardProviders: # {}
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: 'my-default'
+          orgId: 1
+          folder: 'my-folder'
+          type: file
+          disableDeletion: true
+          editable: false
+          options:
+            path: /var/lib/grafana/dashboards/my-default
 
-fluent-bit:
-  enabled: false
+  #    - name: 'default'
+  #      orgId: 1
+  #      folder: ''
+  #      type: file
+  #      disableDeletion: false
+  #      editable: true
+  #      options:
+  #        path: /var/lib/grafana/dashboards/default
 
-prometheus:
-  enabled: false
+  ## Configure grafana dashboard to import
+  ## NOTE: To use dashboards you must also enable/configure dashboardProviders
+  ## ref: https://grafana.com/dashboards
+  ##
+  ## dashboards per provider, use provider name as key.
+  ##
+  dashboards: # {}
+    my-default:
+      logs-app:
+        gnetId: 13639
+        revision: 2
+        datasource: Loki
+      loki-kubernetes-logs:
+        gnetId: 15141
+        revision: 1
+        datasource: Loki
 
-filebeat:
-  enabled: false
-
-logstash:
-  enabled: false
-
-# proxy is currently only used by loki test pod
-# Note: If http_proxy/https_proxy are set, then no_proxy should include the
-# loki service name, so that tests are able to communicate with the loki
-# service.
-proxy:
-  http_proxy: ""
-  https_proxy: ""
-  no_proxy: ""
