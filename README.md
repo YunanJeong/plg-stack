@@ -58,4 +58,6 @@ loki:
 
 - promtail이 로그수집하는 주기(scrape_interval): 10s
 - promtail이 Loki로 보내는 주기: 1s (단, batch buffer에 영향 받음)
-- 위 두 항목 모두 promtail에서 설정함. value파일에서 제어 가능하며, 실행중인 컨테이너에선 `/etc/promtail/promtail.yaml`에서 확인가능
+- 위 두 항목 모두 promtail에서 설정함.
+- 상위차트, 하위차트 helm value파일에서 모두 제어 가능하며, 실행중인 컨테이너에선 `/etc/promtail/promtail.yaml`에서 확인가능
+- 별도로 설정하지 않을 시, promtail.yaml에서도 미기입되어있으므로, 위 default 값을 참고하면 됨
