@@ -63,6 +63,12 @@ loki:
       retention_enabled: true  # false면, 무제한 저장
     limits_config:
       retention_period: 168h    # default: 744h(31일), 최소 24h
+  persistence:
+    enabled: true
+    size: 100Gi
+    # local pv의 실제 저장경로는 storageClass에서 지정한다.
+    # storageClassName 미할당시, K8s 배포판에서 기본실행된 default StorageClass가 선택된다.   
+    storageClassName: local-loki
 
 grafana:
   enabled: true
@@ -90,6 +96,10 @@ grafana:
     
   adminUser: admin
   adminPassword: admin
+  
+  persistence:
+    type: statefulset  # helm uninstall 해도 남아있게 하려면 statefulset
+    enabled: true
 
   ## Configure grafana dashboard providers
   ## ref: http://docs.grafana.org/administration/provisioning/#dashboards
@@ -108,15 +118,6 @@ grafana:
           editable: false
           options:
             path: /var/lib/grafana/dashboards/my-default
-
-  #    - name: 'default'
-  #      orgId: 1
-  #      folder: ''
-  #      type: file
-  #      disableDeletion: false
-  #      editable: true
-  #      options:
-  #        path: /var/lib/grafana/dashboards/default
 
   ## Configure grafana dashboard to import
   ## NOTE: To use dashboards you must also enable/configure dashboardProviders

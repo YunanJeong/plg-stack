@@ -1,0 +1,13 @@
+# kubectl apply -f loki-stroage-class.yaml
+# /data 와 같이 별도 마운트된 경로에 저장하고 싶을 시 신규 storageClass 생성이 필요
+# 이후 pv 설정의 storageClassName섹션에서 이 storageClass 이름을 등록
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-loki
+provisioner: rancher.io/local-path
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Delete
+parameters:
+  path: "/data"
