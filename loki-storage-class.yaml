@@ -9,7 +9,7 @@ metadata:
   # annotations:
     # storageclass.kubernetes.io/is-default-class: "true"
 # 다양한 provisioner들이 있고, 보통은 K8s 배포판에 따라 정해지는 듯
-provisioner: rancher.io/local-path
+provisioner: kubernetes.io/no-provisioner  # rancher.io/local-path
 volumeBindingMode: WaitForFirstConsumer
 reclaimPolicy: Delete
 

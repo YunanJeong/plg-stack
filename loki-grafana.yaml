@@ -66,9 +66,15 @@ loki:
   persistence:
     enabled: true
     size: 100Gi
+    # selector:
+    #   matchLabels:
+    #     app.kubernetes.io/name: loki
+    # subPath: ""
+    existingClaim: loki-pv-claim
+    
     # local pv의 실제 저장경로는 storageClass에서 지정한다.
     # storageClassName 미할당시, K8s 배포판에서 기본실행된 default StorageClass가 선택된다.   
-    storageClassName: local-loki
+    # storageClassName: local-loki
 
 grafana:
   enabled: true
