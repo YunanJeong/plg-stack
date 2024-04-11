@@ -1,32 +1,32 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: loki-pv   # 이름 고정
+  name: loki-pv
   labels:
-    name: loki-pv
+    name: loki-pv       # PVC가 이 PV를 selector로 참조할 수 있도록 레이블 설정
 spec:
   capacity:
     storage: 100Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/data"
-  # claimRef:
-  #   name: loki-pv-claim
-  #   namespace: default
+    path: "/data"       # PV 데이터가 실제 저장되는 로컬호스트의 경로
+
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: loki-pv-claim
+  name: loki-pv-claim   # 헬름values의 existingClaim섹션에서 이 이름을 참조시켜 준다.
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteOnce     # 사용할 pv 설정과 일치시켜 준다.
   resources:
     requests:
-      storage: 100Gi
-  # pvc가 조건에 맞는 pv를 찾는게 아니라, 특정 pv를 참조하도록 설정
+      storage: 100Gi    # 사용할 pv 설정과 일치시켜 준다.
+  
   selector:
     matchLabels:
-      name: loki-pv
-  storageClassName: ""
+      name: loki-pv     # pvc가 특정 pv를 참조하도록 설정
+
+  storageClassName: ""  # 빈 문자열 => storageClass 미지정 (동적 프로비저닝 비활성화)
+                        # 빈 값 or 섹션생략 => default storageClass 지정됨 (default provisioner에 의한 동적 프로비저닝 활성화)
