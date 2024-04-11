@@ -67,7 +67,7 @@ loki:
     enabled: true
     size: 100Gi
     # 사전 설정된 pvc 있는 경우 이름을 지정
-    # existingClaim: loki-pv-claim
+    existingClaim: loki-pv-claim
 
     ############################################
     # pv의 실제 로컬저장경로 변경시
