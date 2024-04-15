@@ -1,7 +1,7 @@
 # PLG Stack
 
 Promtail, Loki, Grafana Stack
-클러스터 로그 모니터링용
+로그 모니터링용
 
 ## 설치
 
