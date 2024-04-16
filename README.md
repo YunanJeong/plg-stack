@@ -62,3 +62,9 @@ loki:
 - 위 두 항목 모두 promtail에서 설정함.
 - 상위차트, 하위차트 helm value파일에서 모두 제어 가능하며, 실행중인 컨테이너에선 `/etc/promtail/promtail.yaml`에서 확인가능
 - 별도로 설정하지 않을 시, promtail.yaml에서도 미기입되어있으므로, 위 default 값을 참고하면 됨
+
+## PVC, PV 설정 관련
+
+### Grafana
+
+### Loki

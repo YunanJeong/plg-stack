@@ -1,0 +1,778 @@
+---
+# Source: loki-stack/charts/grafana/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    helm.sh/chart: grafana-6.43.5
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: lok-gra
+    app.kubernetes.io/version: "8.3.5"
+    app.kubernetes.io/managed-by: Helm
+  name: lok-gra-grafana
+  namespace: default
+---
+# Source: loki-stack/charts/loki/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: loki
+    chart: loki-2.16.0
+    release: lok-gra
+    heritage: Helm
+  annotations:
+    {}
+  name: lok-gra-loki
+  namespace: default
+automountServiceAccountToken: true
+---
+# Source: loki-stack/charts/grafana/templates/secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: lok-gra-grafana
+  namespace: default
+  labels:
+    helm.sh/chart: grafana-6.43.5
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: lok-gra
+    app.kubernetes.io/version: "8.3.5"
+    app.kubernetes.io/managed-by: Helm
+type: Opaque
+data:
+  admin-user: "YWRtaW4="
+  admin-password: "YWRtaW4="
+  ldap-toml: ""
+---
+# Source: loki-stack/charts/loki/templates/secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: lok-gra-loki
+  namespace: default
+  labels:
+    app: loki
+    chart: loki-2.16.0
+    release: lok-gra
+    heritage: Helm
+data:
+  loki.yaml: YXV0aF9lbmFibGVkOiBmYWxzZQpjaHVua19zdG9yZV9jb25maWc6CiAgbWF4X2xvb2tfYmFja19wZXJpb2Q6IDBzCmNvbXBhY3RvcjoKICByZXRlbnRpb25fZW5hYmxlZDogdHJ1ZQogIHNoYXJlZF9zdG9yZTogZmlsZXN5c3RlbQogIHdvcmtpbmdfZGlyZWN0b3J5OiAvZGF0YS9sb2tpL2JvbHRkYi1zaGlwcGVyLWNvbXBhY3Rvcgppbmdlc3RlcjoKICBjaHVua19ibG9ja19zaXplOiAyNjIxNDQKICBjaHVua19pZGxlX3BlcmlvZDogM20KICBjaHVua19yZXRhaW5fcGVyaW9kOiAxbQogIGxpZmVjeWNsZXI6CiAgICByaW5nOgogICAgICByZXBsaWNhdGlvbl9mYWN0b3I6IDEKICBtYXhfdHJhbnNmZXJfcmV0cmllczogMAogIHdhbDoKICAgIGRpcjogL2RhdGEvbG9raS93YWwKbGltaXRzX2NvbmZpZzoKICBlbmZvcmNlX21ldHJpY19uYW1lOiBmYWxzZQogIG1heF9lbnRyaWVzX2xpbWl0X3Blcl9xdWVyeTogNTAwMAogIHJlamVjdF9vbGRfc2FtcGxlczogdHJ1ZQogIHJlamVjdF9vbGRfc2FtcGxlc19tYXhfYWdlOiAxNjhoCiAgcmV0ZW50aW9uX3BlcmlvZDogMTY4aAptZW1iZXJsaXN0OgogIGpvaW5fbWVtYmVyczoKICAtICdsb2stZ3JhLWxva2ktbWVtYmVybGlzdCcKc2NoZW1hX2NvbmZpZzoKICBjb25maWdzOgogIC0gZnJvbTogIjIwMjAtMTAtMjQiCiAgICBpbmRleDoKICAgICAgcGVyaW9kOiAyNGgKICAgICAgcHJlZml4OiBpbmRleF8KICAgIG9iamVjdF9zdG9yZTogZmlsZXN5c3RlbQogICAgc2NoZW1hOiB2MTEKICAgIHN0b3JlOiBib2x0ZGItc2hpcHBlcgpzZXJ2ZXI6CiAgZ3JwY19saXN0ZW5fcG9ydDogOTA5NQogIGh0dHBfbGlzdGVuX3BvcnQ6IDMxMDAKc3RvcmFnZV9jb25maWc6CiAgYm9sdGRiX3NoaXBwZXI6CiAgICBhY3RpdmVfaW5kZXhfZGlyZWN0b3J5OiAvZGF0YS9sb2tpL2JvbHRkYi1zaGlwcGVyLWFjdGl2ZQogICAgY2FjaGVfbG9jYXRpb246IC9kYXRhL2xva2kvYm9sdGRiLXNoaXBwZXItY2FjaGUKICAgIGNhY2hlX3R0bDogMjRoCiAgICBzaGFyZWRfc3RvcmU6IGZpbGVzeXN0ZW0KICBmaWxlc3lzdGVtOgogICAgZGlyZWN0b3J5OiAvZGF0YS9sb2tpL2NodW5rcwp0YWJsZV9tYW5hZ2VyOgogIHJldGVudGlvbl9kZWxldGVzX2VuYWJsZWQ6IGZhbHNlCiAgcmV0ZW50aW9uX3BlcmlvZDogMHM=
+---
+# Source: loki-stack/charts/grafana/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lok-gra-grafana
+  namespace: default
+  labels:
+    helm.sh/chart: grafana-6.43.5
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: lok-gra
+    app.kubernetes.io/version: "8.3.5"
+    app.kubernetes.io/managed-by: Helm
+data:
+  grafana.ini: |
+    [analytics]
+    check_for_updates = true
+    [grafana_net]
+    url = https://grafana.net
+    [log]
+    mode = console
+    [paths]
+    data = /var/lib/grafana/
+    logs = /var/log/grafana
+    plugins = /var/lib/grafana/plugins
+    provisioning = /etc/grafana/provisioning
+    [server]
+    domain = ''
+  dashboardproviders.yaml: |
+    apiVersion: 1
+    providers:
+    - disableDeletion: true
+      editable: false
+      folder: my-folder
+      name: my-default
+      options:
+        path: /var/lib/grafana/dashboards/my-default
+      orgId: 1
+      type: file
+  download_dashboards.sh: |
+    #!/usr/bin/env sh
+    set -euf
+    mkdir -p /var/lib/grafana/dashboards/my-default
+  
+    curl -skf \
+    --connect-timeout 60 \
+    --max-time 60 \
+    -H "Accept: application/json" \
+    -H "Content-Type: application/json;charset=UTF-8" \
+      "https://grafana.com/api/dashboards/13639/revisions/2/download" \
+      | sed '/-- .* --/! s/"datasource":.*,/"datasource": "Loki",/g' \
+    > "/var/lib/grafana/dashboards/my-default/logs-app.json"
+      
+    curl -skf \
+    --connect-timeout 60 \
+    --max-time 60 \
+    -H "Accept: application/json" \
+    -H "Content-Type: application/json;charset=UTF-8" \
+      "https://grafana.com/api/dashboards/15141/revisions/1/download" \
+      | sed '/-- .* --/! s/"datasource":.*,/"datasource": "Loki",/g' \
+    > "/var/lib/grafana/dashboards/my-default/loki-kubernetes-logs.json"
+---
+# Source: loki-stack/charts/grafana/templates/dashboards-json-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lok-gra-grafana-dashboards-my-default
+  namespace: default
+  labels:
+    helm.sh/chart: grafana-6.43.5
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: lok-gra
+    app.kubernetes.io/version: "8.3.5"
+    app.kubernetes.io/managed-by: Helm
+    dashboard-provider: my-default
+data:
+  {}
+---
+# Source: loki-stack/templates/datasources.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lok-gra-loki-stack
+  namespace: default
+  labels:
+    app: loki-stack
+    chart: loki-stack-2.10.2
+    release: lok-gra
+    heritage: Helm
+    grafana_datasource: "1"
+data:
+  loki-stack-datasource.yaml: |-
+    apiVersion: 1
+    datasources:
+    - name: Loki
+      type: loki
+      access: proxy
+      url: "http://lok-gra-loki:3100"
+      version: 1
+      isDefault: false
+      jsonData:
+        {}
+---
+# Source: loki-stack/charts/grafana/templates/clusterrole.yaml
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  labels:
+    helm.sh/chart: grafana-6.43.5
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: lok-gra
+    app.kubernetes.io/version: "8.3.5"
+    app.kubernetes.io/managed-by: Helm
+  name: lok-gra-grafana-clusterrole
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["configmaps", "secrets"]
+  verbs: ["get", "watch", "list"]
+---
+# Source: loki-stack/charts/grafana/templates/clusterrolebinding.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: lok-gra-grafana-clusterrolebinding
+  labels:
+    helm.sh/chart: grafana-6.43.5
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: lok-gra
+    app.kubernetes.io/version: "8.3.5"
+    app.kubernetes.io/managed-by: Helm
+subjects:
+  - kind: ServiceAccount
+    name: lok-gra-grafana
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: lok-gra-grafana-clusterrole
+  apiGroup: rbac.authorization.k8s.io
+---
+# Source: loki-stack/charts/grafana/templates/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: lok-gra-grafana
+  namespace: default
+  labels:
+    helm.sh/chart: grafana-6.43.5
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: lok-gra
+    app.kubernetes.io/version: "8.3.5"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:      ['extensions']
+  resources:      ['podsecuritypolicies']
+  verbs:          ['use']
+  resourceNames:  [lok-gra-grafana]
+---
+# Source: loki-stack/charts/loki/templates/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: lok-gra-loki
+  namespace: default
+  labels:
+    app: loki
+    chart: loki-2.16.0
+    release: lok-gra
+    heritage: Helm
+rules:
+- apiGroups:      ['extensions']
+  resources:      ['podsecuritypolicies']
+  verbs:          ['use']
+  resourceNames:  [lok-gra-loki]
+---
+# Source: loki-stack/charts/grafana/templates/rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: lok-gra-grafana
+  namespace: default
+  labels:
+    helm.sh/chart: grafana-6.43.5
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: lok-gra
+    app.kubernetes.io/version: "8.3.5"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: lok-gra-grafana
+subjects:
+- kind: ServiceAccount
+  name: lok-gra-grafana
+  namespace: default
+---
+# Source: loki-stack/charts/loki/templates/rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: lok-gra-loki
+  namespace: default
+  labels:
+    app: loki
+    chart: loki-2.16.0
+    release: lok-gra
+    heritage: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: lok-gra-loki
+subjects:
+- kind: ServiceAccount
+  name: lok-gra-loki
+---
+# Source: loki-stack/charts/grafana/templates/headless-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: lok-gra-grafana-headless
+  namespace: default
+  labels:
+    helm.sh/chart: grafana-6.43.5
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: lok-gra
+    app.kubernetes.io/version: "8.3.5"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: lok-gra
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000
+---
+# Source: loki-stack/charts/grafana/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: lok-gra-grafana
+  namespace: default
+  labels:
+    helm.sh/chart: grafana-6.43.5
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: lok-gra
+    app.kubernetes.io/version: "8.3.5"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: LoadBalancer
+  ports:
+    - name: service
+      port: 3000
+      protocol: TCP
+      targetPort: 3000
+  selector:
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: lok-gra
+---
+# Source: loki-stack/charts/loki/templates/service-headless.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: lok-gra-loki-headless
+  namespace: default
+  labels:
+    app: loki
+    chart: loki-2.16.0
+    release: lok-gra
+    heritage: Helm
+    variant: headless
+spec:
+  clusterIP: None
+  ports:
+    - port: 3100
+      protocol: TCP
+      name: http-metrics
+      targetPort: http-metrics
+  selector:
+    app: loki
+    release: lok-gra
+---
+# Source: loki-stack/charts/loki/templates/service-memberlist.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: lok-gra-loki-memberlist
+  namespace: default
+  labels:
+    app: loki
+    chart: loki-2.16.0
+    release: lok-gra
+    heritage: Helm
+spec:
+  type: ClusterIP
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+    - name: http
+      port: 7946
+      targetPort: memberlist-port
+      protocol: TCP
+  selector:
+    app: loki
+    release: lok-gra
+---
+# Source: loki-stack/charts/loki/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: lok-gra-loki
+  namespace: default
+  labels:
+    app: loki
+    chart: loki-2.16.0
+    release: lok-gra
+    heritage: Helm
+  annotations:
+    {}
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 3100
+      protocol: TCP
+      name: http-metrics
+      targetPort: http-metrics
+  selector:
+    app: loki
+    release: lok-gra
+---
+# Source: loki-stack/charts/grafana/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: lok-gra-grafana
+  namespace: default
+  labels:
+    helm.sh/chart: grafana-6.43.5
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: lok-gra
+    app.kubernetes.io/version: "8.3.5"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+      app.kubernetes.io/instance: lok-gra
+  serviceName: lok-gra-grafana-headless
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: grafana
+        app.kubernetes.io/instance: lok-gra
+      annotations:
+        checksum/config: 44a52026adc6b3872f28d7c567229a38387b61d2212e7305d8334d38dff494bb
+        checksum/dashboards-json-config: 084d0abafb99c38e55e580e56076772e571eb1a3979ec0846e79b462336b3e9f
+        checksum/sc-dashboard-provider-config: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
+        checksum/secret: 5d687e2d5e91accfc289ef64408ffb035abdca30ff6193fd19a62004ab0a4306
+    spec:
+      
+      serviceAccountName: lok-gra-grafana
+      automountServiceAccountToken: true
+      securityContext:
+        fsGroup: 472
+        runAsGroup: 472
+        runAsUser: 472
+      initContainers:
+        - name: init-chown-data
+          image: "busybox:1.31.1"
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 0
+          command: ["chown", "-R", "472:472", "/var/lib/grafana"]
+          volumeMounts:
+            - name: storage
+              mountPath: "/var/lib/grafana"
+        - name: download-dashboards
+          image: "curlimages/curl:7.85.0"
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh"]
+          args: [ "-c", "mkdir -p /var/lib/grafana/dashboards/default && /bin/sh -x /etc/grafana/download_dashboards.sh" ]
+          env:
+          volumeMounts:
+            - name: config
+              mountPath: "/etc/grafana/download_dashboards.sh"
+              subPath: download_dashboards.sh
+            - name: storage
+              mountPath: "/var/lib/grafana"
+      enableServiceLinks: true
+      containers:
+        - name: grafana-sc-datasources
+          image: "quay.io/kiwigrid/k8s-sidecar:1.19.2"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: METHOD
+              value: WATCH
+            - name: LABEL
+              value: ""
+            - name: FOLDER
+              value: "/etc/grafana/provisioning/datasources"
+            - name: RESOURCE
+              value: "both"
+            - name: REQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: lok-gra-grafana
+                  key: admin-user
+            - name: REQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lok-gra-grafana
+                  key: admin-password
+            - name: REQ_URL
+              value: http://localhost:3000/api/admin/provisioning/datasources/reload
+            - name: REQ_METHOD
+              value: POST
+          volumeMounts:
+            - name: sc-datasources-volume
+              mountPath: "/etc/grafana/provisioning/datasources"
+        - name: grafana
+          image: "grafana/grafana:8.3.5"
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: config
+              mountPath: "/etc/grafana/grafana.ini"
+              subPath: grafana.ini
+            - name: storage
+              mountPath: "/var/lib/grafana"
+            - name: config
+              mountPath: "/etc/grafana/provisioning/dashboards/dashboardproviders.yaml"
+              subPath: "dashboardproviders.yaml"
+            - name: sc-datasources-volume
+              mountPath: "/etc/grafana/provisioning/datasources"
+          ports:
+            - name: grafana
+              containerPort: 3000
+              protocol: TCP
+          env:
+            - name: GF_SECURITY_ADMIN_USER
+              valueFrom:
+                secretKeyRef:
+                  name: lok-gra-grafana
+                  key: admin-user
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lok-gra-grafana
+                  key: admin-password
+            - name: GF_PATHS_DATA
+              value: /var/lib/grafana/
+            - name: GF_PATHS_LOGS
+              value: /var/log/grafana
+            - name: GF_PATHS_PLUGINS
+              value: /var/lib/grafana/plugins
+            - name: GF_PATHS_PROVISIONING
+              value: /etc/grafana/provisioning
+          livenessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 60
+            timeoutSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+      volumes:
+        - name: config
+          configMap:
+            name: lok-gra-grafana
+        - name: dashboards-my-default
+          configMap:
+            name: lok-gra-grafana-dashboards-my-default
+      # nothing
+        - name: sc-datasources-volume
+          emptyDir: {}
+  volumeClaimTemplates:
+  - metadata:
+      name: storage
+    spec:
+      accessModes: [ReadWriteOnce]
+      storageClassName: 
+      resources:
+        requests:
+          storage: 10Gi
+---
+# Source: loki-stack/charts/loki/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: lok-gra-loki
+  namespace: default
+  labels:
+    app: loki
+    chart: loki-2.16.0
+    release: lok-gra
+    heritage: Helm
+  annotations:
+    {}
+spec:
+  podManagementPolicy: OrderedReady
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loki
+      release: lok-gra
+  serviceName: lok-gra-loki-headless
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: loki
+        name: lok-gra-loki
+        release: lok-gra
+      annotations:
+        checksum/config: 7949d2271dddc0e9f556ecde281d4a3b30a46161ac127cdb5901c116d7ce2d77
+        prometheus.io/port: http-metrics
+        prometheus.io/scrape: "true"
+    spec:
+      serviceAccountName: lok-gra-loki
+      securityContext:
+        fsGroup: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+      initContainers:
+        []
+      containers:
+        - name: loki
+          image: "grafana/loki:2.6.1"
+          imagePullPolicy: IfNotPresent
+          args:
+            - "-config.file=/etc/loki/loki.yaml"
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: config
+              mountPath: /etc/loki
+            - name: storage
+              mountPath: "/data"
+              subPath: 
+          ports:
+            - name: http-metrics
+              containerPort: 3100
+              protocol: TCP
+            - name: grpc
+              containerPort: 9095
+              protocol: TCP
+            - name: memberlist-port
+              containerPort: 7946
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: http-metrics
+            initialDelaySeconds: 45
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http-metrics
+            initialDelaySeconds: 45
+          resources:
+            {}
+          securityContext:
+            readOnlyRootFilesystem: true
+          env:
+      nodeSelector:
+        {}
+      affinity:
+        {}
+      tolerations:
+        []
+      terminationGracePeriodSeconds: 4800
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: config
+          secret:
+            secretName: lok-gra-loki
+  volumeClaimTemplates:
+  - metadata:
+      name: storage
+      labels:
+        {}
+      annotations:
+        {}
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: "100Gi"
+      storageClassName: 
+      selector:
+        matchLabels:
+          pvname: loki-pv
+---
+# Source: loki-stack/charts/grafana/templates/tests/test-serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    helm.sh/chart: grafana-6.43.5
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: lok-gra
+    app.kubernetes.io/version: "8.3.5"
+    app.kubernetes.io/managed-by: Helm
+  name: lok-gra-grafana-test
+  namespace: default
+  annotations:
+    "helm.sh/hook": test-success
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+---
+# Source: loki-stack/charts/grafana/templates/tests/test-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lok-gra-grafana-test
+  namespace: default
+  annotations:
+    "helm.sh/hook": test-success
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+  labels:
+    helm.sh/chart: grafana-6.43.5
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: lok-gra
+    app.kubernetes.io/version: "8.3.5"
+    app.kubernetes.io/managed-by: Helm
+data:
+  run.sh: |-
+    @test "Test Health" {
+      url="http://lok-gra-grafana/api/health"
+
+      code=$(wget --server-response --spider --timeout 90 --tries 10 ${url} 2>&1 | awk '/^  HTTP/{print $2}')
+      [ "$code" == "200" ]
+    }
+---
+# Source: loki-stack/charts/grafana/templates/tests/test-role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: lok-gra-grafana-test
+  namespace: default
+  annotations:
+    "helm.sh/hook": test-success
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+  labels:
+    helm.sh/chart: grafana-6.43.5
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: lok-gra
+    app.kubernetes.io/version: "8.3.5"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:      ['policy']
+  resources:      ['podsecuritypolicies']
+  verbs:          ['use']
+  resourceNames:  [lok-gra-grafana-test]
+---
+# Source: loki-stack/charts/grafana/templates/tests/test-rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: lok-gra-grafana-test
+  namespace: default
+  annotations:
+    "helm.sh/hook": test-success
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+  labels:
+    helm.sh/chart: grafana-6.43.5
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: lok-gra
+    app.kubernetes.io/version: "8.3.5"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: lok-gra-grafana-test
+subjects:
+- kind: ServiceAccount
+  name: lok-gra-grafana-test
+  namespace: default
+---
+# Source: loki-stack/charts/grafana/templates/tests/test.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lok-gra-grafana-test
+  labels:
+    helm.sh/chart: grafana-6.43.5
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: lok-gra
+    app.kubernetes.io/version: "8.3.5"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": test-success
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+  namespace: default
+spec:
+  serviceAccountName: lok-gra-grafana-test
+  containers:
+    - name: lok-gra-test
+      image: "bats/bats:v1.4.1"
+      imagePullPolicy: "IfNotPresent"
+      command: ["/opt/bats/bin/bats", "-t", "/tests/run.sh"]
+      volumeMounts:
+        - mountPath: /tests
+          name: tests
+          readOnly: true
+  volumes:
+  - name: tests
+    configMap:
+      name: lok-gra-grafana-test
+  restartPolicy: Never
