@@ -42,6 +42,7 @@ helm upgrade eks-loki grafana/loki-stack --version 2.9.12 -f my_value.yaml
   - Compactor로 Retention 적용시, TableManager는 필요없음 (공식)
   - [Loki Retention 공식 문서](https://grafana.com/docs/loki/latest/operations/storage/retention/)
   - [블로그 중 Loki Retention 설정 팁](https://nyyang.tistory.com/167)
+  - 추가: TableManager는 Deprecated
 
 ### 최소 설정으로 빠르게 retention 적용방법
 
