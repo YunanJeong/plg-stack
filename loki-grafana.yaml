@@ -63,6 +63,7 @@ loki:
       retention_enabled: true       # false면, 무제한 저장
     limits_config:
       retention_period: 168h        # default: 744h(31일), 최소 24h
+      
   persistence:
     enabled: true
     size: 100Gi                     # 동적 프로비저닝시 지정

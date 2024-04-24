@@ -83,7 +83,7 @@ loki:
 ```yaml
 grafana:
   persistence:
-    type: statefulset  # helm uninstall 해도 남아있게 하려면 statefulset
+    type: statefulset  # helm uninstall 해도 남아있게 하려면 statefulset 필수. default 설정 아님.
     enabled: true
 ```
 
