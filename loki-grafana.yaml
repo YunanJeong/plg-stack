@@ -60,34 +60,14 @@ loki:
 
   config:
     compactor:
-      retention_enabled: true  # false면, 무제한 저장
+      retention_enabled: true       # false면, 무제한 저장
     limits_config:
-      retention_period: 168h    # default: 744h(31일), 최소 24h
+      retention_period: 168h        # default: 744h(31일), 최소 24h
   persistence:
     enabled: true
-    size: 100Gi
-    # 사전 설정된 pvc 있는 경우 이름을 지정
-    existingClaim: loki-pv-claim
-
-    ############################################
-    # pv의 실제 로컬저장경로 변경시
-    ############################################
-    # helm install 전에 별도 매니페스트로 pv, pvc를 생성하는 방식(정적 프로비저닝)이 가장 편하다.
-
-    # 정적 프로비저닝? => pv와 pvc를 매니페스트로 수동생성
-    # 동적 프로비저닝? => pv와 pvc를 사전명세인 StorageClass와 Provisioner로 자동생성
-
-    # 동적 프로비저닝 미사용 이유
-      # pv로컬저장경로를 바꾸려면, storageClass와 provisioner를 둘 다 설정해야 한다.
-      # storageClass는 매니페스트 하나만 작성하면되지만, provisioner는 일반적으로 K8s 배포판에 항시 실행되는 kube-system Pod이다. 
-      # K3s의 경우, local-path-provisioner를 비활성화하고, 새로 설치해야 해서 너무 번거로움
-      # 또한, provisioner 변경시 클러스터 내 실행중인 모든 pv에 영향을 미칠 리스크가 있음
-      # 상당한 수의 pv를 다루지 않는 한 비효율적인 방법이다.
-
-    # loki-stack 헬름value에서 pvc설정이 지원되지만, 이를 사용하지않고 별도 매니페스트로 작성하는 이유
-     # loki-stack 차트에서 동적프로비저닝이 강제되기 때문에 사용하지않는다.
-     # 정적 프로비저닝하려면 storageClassName에 "" 빈 따옴표를 넣어서 storageClass를 미선택해야 하는데, 헬름차트에선 빈 값으로 인식해서 default StorageClass가 강제선택되어버림(동적프로비저닝 강제활성)
-    
+    size: 100Gi                     # 동적 프로비저닝시 지정
+    # storageClassName:             # 동적 프로비저닝시 지정
+    # existingClaim: loki-pv-claim  # 사전 설정된 pvc 있는 경우 이름을 지정 (정적 프로비저닝)
 
 grafana:
   enabled: true
