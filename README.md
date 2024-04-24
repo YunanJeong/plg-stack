@@ -63,6 +63,17 @@ loki:
 - 상위차트, 하위차트 helm value파일에서 모두 제어 가능하며, 실행중인 컨테이너에선 `/etc/promtail/promtail.yaml`에서 확인가능
 - 별도로 설정하지 않을 시, promtail.yaml에서도 미기입되어있으므로, 위 default 값을 참고하면 됨
 
+## Grafana에서 Loki 패널을 여러 개 사용시, too many outstanding requests 오류 해결?
+
+```yaml
+loki:
+  config:
+    querier:
+      max_concurrent: 2048
+    query_scheduler:
+      max_outstanding_requests_per_tenant: 2048
+```
+
 ## PVC, PV 설정 관련
 
 ### Grafana
