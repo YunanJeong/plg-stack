@@ -28,7 +28,7 @@ loki:
     # nodePort:
     port: 3100
     annotations: # {}
-      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"                # EKS
+      service.beta.kubernetes.io/aws-load-balancer-type:   "external"         # EKS
       service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"  # EKS
     labels: {}
     targetPort: http-metrics
@@ -38,6 +38,12 @@ loki:
       retention_enabled: true  # false면, 무제한 저장
     limits_config:
       retention_period: 168h    # default: 744h(31일), 최소 24h
+
+  persistence:
+    enabled: false
+    size: 100Gi                     # 동적 프로비저닝시 지정
+    # storageClassName:             # 동적 프로비저닝시 지정
+    # existingClaim: loki-pv-claim  # 사전 설정된 pvc 있는 경우 이름을 지정 (정적 프로비저닝)
 
 promtail:
   enabled: true
