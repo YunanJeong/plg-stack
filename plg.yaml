@@ -37,7 +37,13 @@ promtail:
     clients:
       # 로그 데이터를 전송할 주소. # Promtail은 Loki쪽으로 로그를 PUSH한다.
       - url: http://{{ .Release.Name }}:3100/loki/api/v1/push
-
+  # 다른 앱 부하에 의한 promtail 실행 이상 방지
+  resources: # {}
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits: {}
+    
 fluent-bit:
   enabled: false
 
