@@ -43,6 +43,15 @@ promtail:
       cpu: 100m
       memory: 128Mi
     limits: {}
+  # livenessProbe: 앱이 비정상으로 판단될시 재실행 (EKS에서 빈번히 신규노드 실행시 간헐적 실패케이스가 있는 듯하여 대응)
+  # readiness: 이미 이 차트에선 default 설정이 있음. 하지만 readiness는 초기셋업 확인용으로, 이상동작시 종료,재실행 동작을 하진 않음
+  livenessProbe: 
+    httpGet:
+      path: /ready
+      port: 3101
+    initialDelaySeconds: 15   # Running status 진입 후 카운트 시작
+    periodSeconds: 5
+    failureThreshold: 3
     
 fluent-bit:
   enabled: false
