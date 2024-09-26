@@ -51,8 +51,8 @@ promtail:
       port: 3101
     initialDelaySeconds: 15   # Running status 진입 후 카운트 시작
     periodSeconds: 5
-    failureThreshold: 3
-    
+    failureThreshold: 5
+
 fluent-bit:
   enabled: false
 
