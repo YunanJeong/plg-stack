@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pvc-eks-loki-241025-migration-ap-northeast-2d
+  labels:
+    name: pvc-eks-loki-241025-migration-ap-northeast-2d       
+spec:
+  capacity:
+    storage: 30Gi  # 실제 EBS와 동일한 값으로
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: gp2 # ""          # 헬름차트의 신규 PVC에서도 gp2쓰면 available상태인 pv를 자동으로 찾아 연결한다.
+  awsElasticBlockStore: 
+    volumeID: vol-xxxxxxxxxxxxx   # 수동생성(복제)한 EBS 볼륨아이디
+    fsType: ext4
