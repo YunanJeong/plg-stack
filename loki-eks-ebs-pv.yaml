@@ -13,7 +13,7 @@ spec:
   persistentVolumeReclaimPolicy: Delete
   
   # gp2: 헬름차트의 신규 PVC설정에서도 동일한 storageClass를 써주면, available상태인 pv를 자동으로 찾아 연결한다(동적프로비저닝)
-  # "": 수동 프로비저닝. PVC도 별도 메니페스트로 직접생성 필요
+  # "": 정적 프로비저닝. PVC도 별도 메니페스트로 직접생성 필요
   storageClassName: gp2 # ""
 
   awsElasticBlockStore: 
