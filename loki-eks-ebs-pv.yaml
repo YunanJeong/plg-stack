@@ -23,5 +23,5 @@ spec:
 # 헬름차트로 배포된 Loki의 EBS PV를 마이그레이션 하는 방법
 # 1. 기존 EBS의 스냅샷을 만들어 신규 EBS 복제본 생성
 # 2. 매니페스트로 PV생성하여 복제된 EBS와 연동
-# 3. storageClassName을 PV와 동일하게 지정 후, 신규 헬름차트로 배포(PVC가 자동생성되고 PV와 자동매칭됨)
+# 3. storageClassName을 PV와 동일하게 지정 후, 신규 헬름차트로 배포(PVC가 자동생성되면서 미리 생성된 PV와 연동됨)
 #   => helm upgrade로는 PVC 수정이 불가하므로, 기존 릴리즈,PVC 삭제후 신규배포하는 방식으로 진행해야 함 
