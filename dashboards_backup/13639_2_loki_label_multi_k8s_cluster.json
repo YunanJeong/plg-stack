@@ -189,7 +189,7 @@
           "description": "",
           "hide": 0,
           "includeAll": false,
-          "label": "DataSource_Loki",
+          "label": "DataSource",
           "multi": false,
           "name": "DS_LOKI",
           "options": [],
