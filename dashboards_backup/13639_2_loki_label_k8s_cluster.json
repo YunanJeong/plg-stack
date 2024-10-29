@@ -325,8 +325,8 @@
       ]
     },
     "timezone": "",
-    "title": "Logs / App (namespace, app, pod 구분 / json parse)",
-    "uid": "change-this-uid-string-you-want",
+    "title": "K8s App Logs (namespace, app, pod 구분 / json parse)",
+    "uid": "change-this-to-what-you-want-g3xcg",
     "version": 69,
     "weekStart": ""
   }

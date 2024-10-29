@@ -335,7 +335,7 @@
       ]
     },
     "timezone": "",
-    "title": "Logs / App (DS, namespace, app, pod 구분 / json parse)",
+    "title": "K8s App Logs / Multi Clusters (DS, namespace, app, pod 구분 / json parse)",
     "uid": "change-this-uid-string-you-want",
     "version": 69,
     "weekStart": ""
