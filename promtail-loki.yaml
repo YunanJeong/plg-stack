@@ -3,7 +3,11 @@ test_pod:
 
 loki:
   enabled: true
-
+  image:
+    repository: grafana/loki
+    tag: 2.9.10        # 차트 2.9.12의 default: 2.6.1 (너무 구버전) # 구버전에선 필터링 이슈있음 # 3버전대로 마이그레이션시 추가작업 필요 
+    pullPolicy: IfNotPresent
+    
   # 클러스터 내부 Grafana에서 Default Datasource로 취급할것인가 여부
   isDefault: false
 
