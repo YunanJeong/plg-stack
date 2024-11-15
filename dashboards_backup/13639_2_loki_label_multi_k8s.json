@@ -16,8 +16,8 @@
         }
       ]
     },
-    "description": "Log Viewer Dashboard for Loki",
-    "editable": true,
+    "description": "K8s App Log Viewer for Multi Clusters",
+    "editable": false,
     "fiscalYearStartMonth": 0,
     "gnetId": 13639,
     "graphTooltip": 0,
@@ -101,7 +101,7 @@
               "type": "loki",
               "uid": "${DS_LOKI}"
             },
-            "expr": "sum(count_over_time({namespace=~\"$namespace\",job=~\"$job\",pod=~\"$pod\"} |= \"$search\" [$__interval]))",
+            "expr": "sum(count_over_time({namespace=\"$namespace\",job=\"$job\",container=~\"$container\",pod=~\".*$podsearch.*\"} |= \"$search\" [$__interval]))",
             "legendFormat": "",
             "refId": "A"
           }
@@ -166,7 +166,7 @@
               "type": "loki",
               "uid": "${DS_LOKI}"
             },
-            "expr": "{namespace=~\"$namespace\",job=~\"$job\",pod=~\"$pod\"} |= \"$search\"",
+            "expr": "{namespace=\"$namespace\",job=\"$job\",container=~\"$container\",pod=~\".*$podsearch.*\"} |= \"$search\"",
             "hide": false,
             "legendFormat": "",
             "refId": "A"
@@ -189,7 +189,7 @@
           "description": "",
           "hide": 0,
           "includeAll": false,
-          "label": "DataSource",
+          "label": "Data Source",
           "multi": false,
           "name": "DS_LOKI",
           "options": [],
@@ -202,13 +202,9 @@
         },
         {
           "current": {
-            "selected": true,
-            "text": [
-              "All"
-            ],
-            "value": [
-              "$__all"
-            ]
+            "selected": false,
+            "text": "",
+            "value": ""
           },
           "datasource": {
             "type": "loki",
@@ -216,9 +212,9 @@
           },
           "definition": "label_values(namespace)",
           "hide": 0,
-          "includeAll": true,
+          "includeAll": false,
           "label": "Namespace",
-          "multi": true,
+          "multi": false,
           "name": "namespace",
           "options": [],
           "query": {
@@ -246,14 +242,14 @@
             "type": "loki",
             "uid": "${DS_LOKI}"
           },
-          "definition": "label_values({namespace=~\"$namespace\"}, job)",
+          "definition": "label_values({namespace=\"$namespace\"}, job)",
           "hide": 0,
           "includeAll": false,
           "label": "Job(app)",
           "multi": false,
           "name": "job",
           "options": [],
-          "query": "label_values({namespace=~\"$namespace\"}, job)",
+          "query": "label_values({namespace=\"$namespace\"}, job)",
           "refresh": 1,
           "regex": "",
           "skipUrlSync": false,
@@ -277,14 +273,14 @@
             "type": "loki",
             "uid": "${DS_LOKI}"
           },
-          "definition": "label_values({job=~\"$job\"}, pod)",
+          "definition": "label_values({job=\"$job\"}, container)",
           "hide": 0,
           "includeAll": true,
-          "label": "Pod",
+          "label": "Container",
           "multi": true,
-          "name": "pod",
+          "name": "container",
           "options": [],
-          "query": "label_values({job=~\"$job\"}, pod)",
+          "query": "label_values({job=\"$job\"}, container)",
           "refresh": 1,
           "regex": "",
           "skipUrlSync": false,
@@ -301,7 +297,27 @@
             "value": ""
           },
           "hide": 0,
-          "label": "String Match",
+          "label": "Pod Search",
+          "name": "podsearch",
+          "options": [
+            {
+              "selected": true,
+              "text": "",
+              "value": ""
+            }
+          ],
+          "query": "",
+          "skipUrlSync": false,
+          "type": "textbox"
+        },
+        {
+          "current": {
+            "selected": true,
+            "text": "",
+            "value": ""
+          },
+          "hide": 0,
+          "label": "Log Search",
           "name": "search",
           "options": [
             {
@@ -335,8 +351,8 @@
       ]
     },
     "timezone": "",
-    "title": "K8s App Logs / Multi Clusters (DS, namespace, app, pod 구분 / json parse)",
-    "uid": "change-this-to-what-you-want-x1wef",
+    "title": "K8s App Logs / Multi Clusters (namespace, app, container, podsearch, logsearch)",
+    "uid": "change-this-uid-x1wef",
     "version": 69,
     "weekStart": ""
   }
