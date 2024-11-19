@@ -55,7 +55,7 @@ loki:
       retention_period: 744h  # default: 744h(31일), 최소 24h
 ```
 
-## 수집주기 Default 값
+## Promtail: 수집주기 Default 값
 
 - promtail이 로그수집하는 주기(scrape_interval): 10s
 - promtail이 Loki로 보내는 주기: 1s (단, batch buffer에 영향 받음)
@@ -132,4 +132,31 @@ loki:
   persistence:
     enabled: true
     existingClaim: loki-pv-claim
+```
+
+## Loki: 로그 필터링 Label 중 Job 과 App
+
+- label
+  - Loki에서 데이터 저장/조회/필터링에 사용되는 key-value
+  - Loki에서 설정하는 것이 아니다.
+  - Loki에 데이터를 주입하는 측(promtail 등)에서 정하는대로 Loki에 저장됨
+- job
+  - 관례적으로 가장 많이 사용되는 Label명
+  - 로그 수집환경에 따라 필터링 기준(label)이 다르기 때문에, Grafana 대시보드도 "job"이라는 이름에 맞춰 배포되는 경우가 많다. 이는 Prometheus도 마찬가지.
+  - 앱 배포자는 job label에 입력될 값을 커스텀하여, 향후 로그 필터링을 할 수 있다.
+  - loki-stack 차트의 promtail은 K8s의 `namespace`와 `app`을 합쳐서 job으로 쓸 수 있도록 기본 설정되어 있다.
+- app
+  - K8s 환경을 모니터링할 때 많이 사용되는 Loki Label
+  - K8s에선 여러 리소스를 동일목적의 앱이라고 인식시키기 위하여, 매니페스트의 `metadata.labels`에 `app.kubernetes.io/name` 또는 `app`표기를 한다. 이는 K8s 공식권장사항이며 헬름차트로 배포되는 대부분 앱들은 이 표기를 준수한다.
+  - `loki-stack` 차트의 promtail은 위 값을 가장 우선적으로 app label로 처리하여 loki에 저장한다.
+
+```yaml
+# 쿠버네티스 매니페스트에서 앱 표기 예시
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-pod
+  labels:
+    app.kubernetes.io/name: my-application  # 표준
+    app: my-app  # 사실상 표준
 ```
