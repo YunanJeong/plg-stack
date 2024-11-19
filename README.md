@@ -150,7 +150,8 @@ loki:
   - K8s에선 여러 리소스를 동일목적의 앱이라고 인식시키기 위하여, 매니페스트의 `metadata.labels`에 `app.kubernetes.io/name` 또는 `app`표기를 한다. 이는 K8s 공식권장사항이며 헬름차트로 배포되는 대부분 앱들은 이 표기를 준수한다.
   - `직접 만든 K8s 앱을 배포한다면 매니페스트에 반드시 app표기를 하도록 하자`
   - `loki-stack` 차트의 promtail은 위 값을 가장 우선적으로 app label로 처리하여 loki에 저장한다.
-
+  - app 표기가 없을 시 후순위로 pod명이 파싱되어 Loki의 app label로 활용되는데 향후 Loki 쿼리시 문제가 발생할 수 있으니 피하는 것이 좋음
+  
 ```yaml
 # 쿠버네티스 매니페스트에서 앱 표기 예시
 apiVersion: v1
