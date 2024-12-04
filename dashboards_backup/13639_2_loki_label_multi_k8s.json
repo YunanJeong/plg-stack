@@ -178,7 +178,9 @@
     ],
     "refresh": "",
     "schemaVersion": 39,
-    "tags": [],
+    "tags": [
+      "Loki"
+    ],
     "templating": {
       "list": [
         {
