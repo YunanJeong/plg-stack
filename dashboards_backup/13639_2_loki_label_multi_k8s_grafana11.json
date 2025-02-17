@@ -126,7 +126,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.0",
       "targets": [
         {
           "datasource": {
@@ -168,7 +168,7 @@
         "sortOrder": "Descending",
         "wrapLogMessage": false
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.0",
       "targets": [
         {
           "datasource": {
@@ -332,8 +332,8 @@
     ]
   },
   "timezone": "",
-  "title": "K8s App Logs / Multi Clusters (Loki, namespace, app, container, podsearch, logsearch)",
-  "uid": "change-this-uid-x1wef",
+  "title": "K8s App Logs / Multi Clusters (Loki, Infinite Scroll, Grafana 11, 2025, namespace, app, container, podsearch, logsearch)",
+  "uid": "change-this-uid-x1w2f",
   "version": 1,
   "weekStart": ""
 }
