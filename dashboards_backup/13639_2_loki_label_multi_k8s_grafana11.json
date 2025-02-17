@@ -126,7 +126,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
@@ -160,6 +160,7 @@
       "maxDataPoints": "",
       "options": {
         "dedupStrategy": "none",
+        "enableInfiniteScrolling": true,
         "enableLogDetails": true,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
@@ -168,7 +169,7 @@
         "sortOrder": "Descending",
         "wrapLogMessage": false
       },
-      "pluginVersion": "11.5.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
