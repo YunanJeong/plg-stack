@@ -215,9 +215,10 @@
   ],
   "preload": false,
   "refresh": "",
-  "schemaVersion": 40,
+  "schemaVersion": 1,
   "tags": [
-    "Loki"
+    "Loki",
+    "K8s"
   ],
   "templating": {
     "list": [
