@@ -42,8 +42,9 @@
       }
     ]
   },
-  "description": "Edited from 13639, K8s App Log Viewer for Multi Clusters",
+  "description": "Centralized Multicluster Monitoring / K8s App Log / Infinite Scroll / Edited from 13639",
   "editable": false,
+  "gnetId": 22874,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "id": 1394,
