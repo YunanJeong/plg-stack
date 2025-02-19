@@ -216,7 +216,7 @@
   ],
   "preload": false,
   "refresh": "",
-  "schemaVersion": 1,
+  "schemaVersion": 39,
   "tags": [
     "Loki",
     "K8s"
