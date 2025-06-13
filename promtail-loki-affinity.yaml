@@ -64,16 +64,24 @@ promtail:
       memory: 128Mi
     limits: {}
 
-  # Node Affinity 설정. 특정 레이블을 가진 노드에는 "promtail을 실행하지 않도록" 설정
-  # Loki 부하에 부담되는 노드가 가끔 있어서 쓸 일 있음
+  # Node Affinity 설정. 특정 레이블을 만족하는 노드에만 배포한다.
+  # 아래는 특정 노드에 "promtail을 배포하지 않도록" 설정한 예시다  # Loki 부하에 부담되는 노드가 가끔 있어서 쓸 일 있음
   affinity: # {}
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-        - matchExpressions:
-          # forwarderDisabled라는 레이블 key가 있으면 배포대상에서 제외
-          - key: "forwarderDisabled" 
-            operator: "DoesNotExist"
+        nodeSelectorTerms:  # nodeSelectorTerms 아래에 나열되는 것들은 OR 조건임
+          - matchExpressions:
+            - key: "karpenter.sh/nodepool" 
+              operator: "NotIn"
+              values: ["super-high-log-generator"]  # karperter.sh/nodepool=super-high-log-generator 이 아닌 경우
+          - matchExpressions:  # matchExpressions 아래에 나열되는 것들은 AND 조건임
+            - key: "forwarderDisabled" 
+              operator: "DoesNotExist"  # forwarderDisabled라는 레이블 key가 없는 경우
+            - key: "forwarderEnabled"   
+              operator: "In"
+              values: ["false"]         # forwarderEnabled=false인 경우
+          
+
 
 fluent-bit:
   enabled: false
