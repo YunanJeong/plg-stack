@@ -71,7 +71,7 @@ promtail:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
         - matchExpressions:
-          # forwarderDisabled 레이블 key가 "없는" 노드에만 promtail을 실행
+          # forwarderDisabled라는 레이블 key가 있으면 배포대상에서 제외
           - key: "forwarderDisabled" 
             operator: "DoesNotExist"
 
