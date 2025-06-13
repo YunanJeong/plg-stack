@@ -1,0 +1,100 @@
+test_pod:
+  enabled: false
+
+loki:
+  enabled: true
+  image:
+    repository: grafana/loki
+    tag: 2.9.10        # 차트 2.9.12의 default: 2.6.1 (너무 구버전) # 구버전에선 필터링 이슈있음 # 3버전대로 마이그레이션시 추가작업 필요 
+    pullPolicy: IfNotPresent
+    
+  # 클러스터 내부 Grafana에서 Default Datasource로 취급할것인가 여부
+  isDefault: false
+
+  # 클러스터 내부 Grafana에서 Loki Datasource를 프로비전하기 위한 ConfigMap에 사용됨. 외부노출시 사용불가.
+  url: http://{{(include "loki.serviceName" .)}}:{{ .Values.loki.service.port }}
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  datasource:
+    jsonData: "{}"
+    uid: ""
+
+  service:
+    type: LoadBalancer
+    # nodePort:
+    port: 3100
+    annotations: # {}
+      service.beta.kubernetes.io/aws-load-balancer-type:   "external"         # EKS
+      service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"  # EKS
+    labels: {}
+    targetPort: http-metrics
+
+  config:
+    compactor:
+      retention_enabled: true  # false면, 무제한 저장
+    limits_config:
+      retention_period: 168h    # default: 744h(31일), 최소 24h
+
+  persistence:
+    enabled: false
+    size: 100Gi                     # 동적 프로비저닝시 지정
+    # storageClassName:             # 동적 프로비저닝시 지정
+    # existingClaim: loki-pv-claim  # 사전 설정된 pvc 있는 경우 이름을 지정 (정적 프로비저닝)
+
+promtail:
+  enabled: true
+  config:
+    logLevel: info
+    serverPort: 3101
+    clients:
+      # 로그 데이터를 전송할 주소. # Promtail은 Loki쪽으로 로그를 PUSH한다.
+      - url: http://{{ .Release.Name }}:3100/loki/api/v1/push
+  # 다른 앱 부하에 의한 promtail 실행 이상 방지
+  resources: # {}
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits: {}
+
+  # Node Affinity 설정. 특정 레이블을 가진 노드에는 "promtail을 실행하지 않도록" 설정
+  # Loki 부하에 부담되는 노드가 가끔 있어서 쓸 일 있음
+  affinity: # {}
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          # forwarderDisabled 레이블 key가 "없는" 노드에만 promtail을 실행
+          - key: "forwarderDisabled" 
+            operator: "DoesNotExist"
+
+fluent-bit:
+  enabled: false
+
+grafana:
+  enabled: false
+
+prometheus:
+  enabled: false
+
+filebeat:
+  enabled: false
+
+logstash:
+  enabled: false
+
+# proxy is currently only used by loki test pod
+# Note: If http_proxy/https_proxy are set, then no_proxy should include the
+# loki service name, so that tests are able to communicate with the loki
+# service.
+proxy:
+  http_proxy: ""
+  https_proxy: ""
+  no_proxy: ""
