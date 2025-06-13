@@ -74,12 +74,12 @@ promtail:
             - key: "karpenter.sh/nodepool" 
               operator: "NotIn"
               values: ["super-high-log-generator"]  # karperter.sh/nodepool=super-high-log-generator 이 아닌 경우
-          - matchExpressions:  # matchExpressions 아래에 나열되는 것들은 AND 조건임
-            - key: "forwarderDisabled" 
-              operator: "DoesNotExist"  # forwarderDisabled라는 레이블 key가 없는 경우
-            - key: "forwarderEnabled"   
-              operator: "In"
-              values: ["false"]         # forwarderEnabled=false인 경우
+          # - matchExpressions:  # matchExpressions 아래에 나열되는 것들은 AND 조건임
+          #   - key: "forwarderDisabled" 
+          #     operator: "DoesNotExist"  # forwarderDisabled라는 레이블 key가 없는 경우
+          #   - key: "forwarderEnabled"   
+          #     operator: "In"
+          #     values: ["false"]         # forwarderEnabled=false인 경우
           
 
 
