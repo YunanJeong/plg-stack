@@ -57,6 +57,11 @@ promtail:
     clients:
       # 로그 데이터를 전송할 주소. # Promtail은 Loki쪽으로 로그를 PUSH한다.
       - url: http://{{ .Release.Name }}:3100/loki/api/v1/push
+
+  # PriorityClassName 리소스 선택 => daemonset들 간 우선순위 지정
+  # 신규노드 생성시 promtail이 가장 먼저 켜져서 로그수집이 누락 방지
+  priorityClassName: "system-node-critical"  # default: null
+
   # 다른 앱 부하에 의한 promtail 실행 이상 방지
   resources: # {}
     requests:
