@@ -62,6 +62,12 @@ promtail:
   # 신규노드 생성시 promtail이 가장 먼저 켜져서 로그수집이 누락 방지
   priorityClassName: "system-node-critical"  # default: null
 
+  # (default toleration 때문에) promtail DaemonSet의 스케줄링이 다른 DaemonSet보다 늦는 문제 
+  # promtail이 critical addon 취급 못 받아 늦게 뜨고, 먼저 내려감 → node-exporter 수준 toleration으로 조정
+  tolerations:
+    - effect: NoSchedule
+      operator: Exists
+
   # 다른 앱 부하에 의한 promtail 실행 이상 방지
   resources: # {}
     requests:
