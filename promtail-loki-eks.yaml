@@ -4,10 +4,10 @@ test_pod:
 loki:
   enabled: true
   image:
-    repository: grafana/loki
+    repository: xxxxxxxxxxxxx.dkr.ecr.ap-northeast-2.amazonaws.com/grafana/loki
     tag: 2.9.10        # 차트 2.9.12의 default: 2.6.1 (너무 구버전) # 구버전에선 필터링 이슈있음 # 3버전대로 마이그레이션시 추가작업 필요 
     pullPolicy: IfNotPresent
-    
+
   # 클러스터 내부 Grafana에서 Default Datasource로 취급할것인가 여부
   isDefault: false
 
@@ -31,24 +31,79 @@ loki:
     type: LoadBalancer
     # nodePort:
     port: 3100
-    annotations: {}
+    annotations: # {}
+      # Network Load Balancer(NLB options)
+      # service.beta.kubernetes.io/aws-load-balancer-type: "external"
+      # service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "instance"  # instance(default) or ip
+      service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"  # 외부통신 허용  # default: internal
+      service.beta.kubernetes.io/load-balancer-source-ranges: "${MY_WORKSPACE_IP_RANGE}/24, ${GRAFANA_IP}/32"  # LB inbound 허용 cidr
+      # service.beta.kubernetes.io/aws-load-balancer-security-groups: "sg-09ef5209b35c94c7f"  # 직접보안그룹 등록시 sourceranges 무시
+
     labels: {}
     targetPort: http-metrics
-
+    # loadBalancerIP: "k8s-platform-loktestl-xxxxxxxxxxxxxxxxxxxxxx.elb.ap-northeast-2.amazonaws.com"
+    # externalTrafficPolicy: cluster   # cluster or local, 헬름차트 버그
+    # loadBalancerSourceRanges: # []
+    #   - ["${MY_WORKSPACE_IP_RANGE}/32"]
+    #   # - "0.0.0.0/0"
+    
   config:
     compactor:
       retention_enabled: true  # false면, 무제한 저장
     limits_config:
-      retention_period: 168h    # default: 744h(31일), 최소 24h
+      retention_period: 744h   # default: 744h(31일), 최소 24h
+
+    # too many outstanding requests 대응
+    querier:
+      max_concurrent: 2048
+    query_scheduler:
+      max_outstanding_requests_per_tenant: 2048
 
   persistence:
-    enabled: false
-    size: 100Gi                     # 동적 프로비저닝시 지정
-    # storageClassName:             # 동적 프로비저닝시 지정
-    # existingClaim: loki-pv-claim  # 사전 설정된 pvc 있는 경우 이름을 지정 (정적 프로비저닝)
+    enabled: true
+    # 동적 프로비저닝할 때만 사용
+    size: 60Gi
+    storageClassName: gp2
+    # 사전 설정된 pvc 있는 경우 이름을 지정
+    # existingClaim: loki-pv-claim
+  
+  nodeSelector: # {}
+    my-karpenter-nodepool: eks-loki
+    topology.kubernetes.io/zone: ap-northeast-2d
+
+  resources: # {}
+    requests: 
+      cpu: 2500m # 100m # 2000m
+      memory: 2500Mi # 200Mi  # 2000Mi
+    limits: {}
+      # cpu: 2000m  # 3000m
+      # memory: 2000Mi # 3500Mi
+
+  # 보안옵션 웬만하면 default 사용할 것.
+  # OnRootMismatch는 스토리지에 대해 최초 전수검사함. 이후 재실행시 루트권한만 체크하여 전수검사는 생략
+  securityContext:
+    fsGroup: 10001
+    runAsGroup: 10001
+    runAsNonRoot: true
+    runAsUser: 10001
+    # 기존 사용하던 Loki 볼륨 마운트 시 누적된 파일 전수조사(chown) 방지(default는 Always or 주석처리)
+    # 루트 디렉토리 권한만 체크하여 불필요한 I/O 병목 및 기동 지연 해결
+    fsGroupChangePolicy: "OnRootMismatch"
+
 
 promtail:
   enabled: true
+  image:
+    # -- The Docker registry
+    registry: xxxxxxxxxxx.dkr.ecr.ap-northeast-2.amazonaws.com
+    # -- Docker image repository
+    repository: grafana/promtail
+    # -- Overrides the image tag whose default is the chart's appVersion
+    tag: 2.9.2
+    # -- Docker image pull policy
+    pullPolicy: IfNotPresent
+
+
   config:
     logLevel: info
     serverPort: 3101
@@ -60,7 +115,7 @@ promtail:
   # 신규노드 생성시 promtail이 가장 먼저 켜져서 로그수집이 누락 방지
   priorityClassName: "system-node-critical"  # default: null
 
-  # (default toleration 때문에) promtail DaemonSet의 스케줄링이 다른 DaemonSet보다 늦는 문제 해결
+  # (default toleration 때문에) promtail DaemonSet의 스케줄링이 다른 DaemonSet보다 늦는 문제 
   # promtail이 critical addon 취급 못 받아 늦게 뜨고, 먼저 내려감 → node-exporter 수준 toleration으로 조정
   tolerations:
     - effect: NoSchedule
@@ -72,7 +127,7 @@ promtail:
       cpu: 100m
       memory: 128Mi
     limits: {}
-
+  
   # livenessProbe: 앱이 비정상으로 판단될시 재실행 (EKS에서 빈번히 신규노드 실행시 간헐적 실패케이스가 있는 듯하여 대응)
   # readiness: 이미 이 차트에선 default 설정이 있음. 하지만 readiness는 초기셋업 확인용으로, 이상동작시 종료,재실행 동작을 하진 않음
   livenessProbe: 
@@ -82,7 +137,6 @@ promtail:
     initialDelaySeconds: 15   # Running status 진입 후 카운트 시작
     periodSeconds: 5
     failureThreshold: 5
-
 
 
 fluent-bit:
