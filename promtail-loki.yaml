@@ -31,6 +31,9 @@ loki:
     type: LoadBalancer
     # nodePort:
     port: 3100
+
+    # SaaS에서 제공하는 LoadBalancer를 Provisioning방식으로 배포&관리할 때 annotations에서 상세옵션 설정가능
+    # EKS, GKE 등 서비스 마다 상세옵션 key-value가 다름
     annotations: {}
     labels: {}
     targetPort: http-metrics
