@@ -32,12 +32,13 @@ loki:
     # nodePort:
     port: 3100
     annotations: # {}
-      # Network Load Balancer(NLB options)
-      # service.beta.kubernetes.io/aws-load-balancer-type: "external"
-      # service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "instance"  # instance(default) or ip
-      service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"  # 외부통신 허용  # default: internal
-      service.beta.kubernetes.io/load-balancer-source-ranges: "${MY_WORKSPACE_IP_RANGE}/24, ${GRAFANA_IP}/32"  # LB inbound 허용 cidr
-      # service.beta.kubernetes.io/aws-load-balancer-security-groups: "sg-09ef5209b35c94c7f"  # 직접보안그룹 등록시 sourceranges 무시
+      # Network Load Balancer(NLB options) 옵션 설정하기
+
+      # service.beta.kubernetes.io/aws-load-balancer-type: "external"                                           # CLB쓰던 시절 NLB선택하는 옵션인데 요새는 안써도 NLB임
+      # service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "instance"                                # instance(default) or ip     
+      service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"                                    # 외부인터넷에서 접근허용  # default: internal(VPC내부전용)
+      service.beta.kubernetes.io/load-balancer-source-ranges: "${MY_WORKSPACE_IP_RANGE}/24, ${GRAFANA_IP}/32"   # LB inbound 허용 cidr
+      # service.beta.kubernetes.io/aws-load-balancer-security-groups: "sg-xxxxxxxxxxxxx"                        # 직접보안그룹 등록시 sourceranges 무시
 
     labels: {}
     targetPort: http-metrics
